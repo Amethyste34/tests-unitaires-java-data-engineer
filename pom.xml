@@ -2,33 +2,100 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <!-- Version du format de pom.xml utilisé par Maven (à ne pas changer) -->
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- ============================================= -->
+    <!-- IDENTITE DU PROJET (les "coordonnées" Maven)   -->
+    <!-- ============================================= -->
+
+    <!-- groupId : identifiant de l'organisation / du domaine, souvent en reverse-DNS -->
     <groupId>fr.diginamic</groupId>
+
+    <!-- artifactId : nom du projet lui-même -->
     <artifactId>tests-unitaires-java-data-engineer</artifactId>
+
+    <!-- version : version du projet. SNAPSHOT = version en développement, pas encore stable -->
     <version>1.0-SNAPSHOT</version>
 
+    <!-- ============================================= -->
+    <!-- PROPRIETES : variables réutilisables dans le pom -->
+    <!-- ============================================= -->
     <properties>
+        <!-- Version de Java utilisée pour compiler le code source -->
         <maven.compiler.source>21</maven.compiler.source>
+        <!-- Version de Java ciblée pour le bytecode généré (doit matcher ton JDK) -->
         <maven.compiler.target>21</maven.compiler.target>
+        <!-- Encodage des fichiers sources, évite les problèmes d'accents/caractères spéciaux -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- ============================================= -->
+    <!-- DEPENDANCES : bibliothèques dont le projet a besoin -->
+    <!-- ============================================= -->
     <dependencies>
-        <!-- Pour JUnit5 (Jupiter) -->
+
+        <!-- JUnit 5 (Jupiter) : framework principal pour écrire et exécuter les tests unitaires -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>5.10.2</version>
+            <!-- scope "test" = disponible uniquement pendant les tests, absent du livrable final -->
             <scope>test</scope>
         </dependency>
-        <!-- Pour Mockito (Mocking) -->
+
+        <!-- Mockito : permet de créer des mocks (objets simulés) pour isoler le code testé
+             de ses dépendances externes (base de données, API, etc.) -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <version>5.11.0</version>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
+
+    <!-- ============================================= -->
+    <!-- BUILD : configuration des plugins Maven        -->
+    <!-- ============================================= -->
+    <build>
+        <plugins>
+
+            <!-- Surefire : plugin qui exécute les tests unitaires lors de "mvn test"
+                 On le déclare explicitement pour figer sa version et éviter les
+                 comportements différents selon les machines/installations -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+            </plugin>
+
+            <!-- JaCoCo : mesure la couverture de code (quel % du code est réellement testé)
+                 Génère un rapport HTML consultable après "mvn test" -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
+                <executions>
+                    <!-- Instrumente le code pour pouvoir mesurer la couverture -->
+                    <execution>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <!-- Génère le rapport HTML dans target/site/jacoco/index.html -->
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>
