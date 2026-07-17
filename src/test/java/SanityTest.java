@@ -3,7 +3,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SanityTest {
     @Test
-    void ça_marche() {
+    void ca_marche() {
         assertEquals(2, 1 + 1);
     }
 }
